@@ -1,19 +1,7 @@
-const inquirer = require('inquirer');
 const ora = require('ora');
 
 const modules = require('../../common/modules');
-
-const getNameModule = async () => {
-  const { nameModule } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'nameModule',
-      message: 'Select module',
-      choices: await modules.getListModules(),
-    },
-  ]);
-  return nameModule;
-};
+const questions = require('../../common/questions');
 
 const unlink = async (nameModule) => {
   const indicator = ora('Unlink module').start();
@@ -23,7 +11,7 @@ const unlink = async (nameModule) => {
 
     if (!nameModule) {
       // Get name module
-      nameModule = await getNameModule();
+      nameModule = await questions.selectModule();
     }
 
     indicator.start();
