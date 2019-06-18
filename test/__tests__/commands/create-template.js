@@ -1,25 +1,26 @@
 const { existsSync, statSync } = require('fs');
-const { exec } = require('child_process');
 
 const { action } = require('../../../src/core/commands/create/action');
 const modules = require('../../../src/core/common/modules');
 
-const nameTemplate = 'TestCreate';
-const path = '/test/__mocks__/module/';
+const { rm } = require('../../helpers');
+const { nameTemplate, pathTemplate } = require('../../__mocks__/constants');
 
+// Get path to created template
 const getPathCreatedTemplate = async () => {
   const pathModule = await modules.getPathModule();
   return `${pathModule}/${nameTemplate}`;
 };
 
 afterAll(async () => {
+  // Remove created templates
   const path = await getPathCreatedTemplate();
-  exec(`rm -rf ${path}`);
+  rm(path);
 });
 
-test('create template in `main` module', async () => {
+test('in `main` module', async () => {
   // Check create template
-  const result = await action({ nameTemplate, path });
+  const result = await action({ nameTemplate, path: pathTemplate });
   expect(result).toBe(true);
 
   // Check structure created template
@@ -37,8 +38,10 @@ test('create template in `main` module', async () => {
   });
 });
 
-test('double template in `main` module', async () => {
+test('double in `main` module', async () => {
   // Check don't create template
-  const result = await action({ nameTemplate, path });
+  const result = await action({ nameTemplate, path: pathTemplate });
   expect(result).toBe(false);
 });
+
+test('in `other` module', () => {});
