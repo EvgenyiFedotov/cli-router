@@ -2,29 +2,27 @@ const { existsSync, statSync } = require('fs');
 
 const { action } = require('../../../src/core/commands/create/action');
 const modules = require('../../../src/core/common/modules');
+const config = require('../../../config');
 
 const { rm } = require('../../helpers');
-const { nameTemplate, pathTemplate } = require('../../__mocks__/constants');
+const {
+  nameTemplate, pathTemplate, nameModule, pathModule,
+} = require('../../__mocks__/constants');
 
-// Get path to created template
-const getPathCreatedTemplate = async () => {
-  const pathModule = await modules.getPathModule();
+/**
+ * Get path to created template
+ * @param {String} [nameModule]
+ */
+const getPathCreatedTemplate = async (nameModule) => {
+  const pathModule = await modules.getPathModule(nameModule);
   return `${pathModule}/${nameTemplate}`;
 };
 
-afterAll(async () => {
-  // Remove created templates
-  const path = await getPathCreatedTemplate();
-  rm(path);
-});
-
-test('in `main` module', async () => {
-  // Check create template
-  const result = await action({ nameTemplate, path: pathTemplate });
-  expect(result).toBe(true);
-
-  // Check structure created template
-  const pathCreatedTemplate = await getPathCreatedTemplate();
+/**
+ * Check structure created template
+ */
+const checkStructCreatedTemplate = async (nameModule) => {
+  const pathCreatedTemplate = await getPathCreatedTemplate(nameModule);
   const pathsChecks = [
     [pathCreatedTemplate, true],
     [`${pathCreatedTemplate}/template`, true],
@@ -36,6 +34,30 @@ test('in `main` module', async () => {
     expect(existsSync(path)).toBe(true);
     expect(statSync(path).isDirectory()).toBe(isDir);
   });
+};
+
+afterAll(async () => {
+  // Remove created templates
+  const listModules = [undefined, nameModule];
+  listModules.forEach(async (nameModule) => {
+    const path = await getPathCreatedTemplate(nameModule);
+    rm(path);
+  });
+
+  // Remove directory `other` module
+  rm(pathModule);
+
+  // Remove `modules.json`
+  rm(config.paths.modulesJson);
+});
+
+test('in `main` module', async () => {
+  // Check create template
+  const result = await action({ nameTemplate, path: pathTemplate });
+  expect(result).toBe(true);
+
+  // Check structure created template
+  await checkStructCreatedTemplate();
 });
 
 test('double in `main` module', async () => {
@@ -44,4 +66,14 @@ test('double in `main` module', async () => {
   expect(result).toBe(false);
 });
 
-test('in `other` module', () => {});
+test('in `other` module', async () => {
+  // Add `other` module
+  await modules.addModule(nameModule, pathModule);
+
+  // Check create template
+  const result = await action({ nameTemplate, nameModule, path: pathTemplate });
+  expect(result).toBe(true);
+
+  // Check structure created template
+  await checkStructCreatedTemplate(nameModule);
+});
