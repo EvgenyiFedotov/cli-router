@@ -7,12 +7,18 @@ const cloneDir = require('../../common/clone-dir');
 const modules = require('../../common/modules');
 const package = require('../../../index');
 
-const use = async (nameModule, { path }) => {
-  const indicator = ora('Use template').start();
-
+/**
+ * Action use template
+ * @param {Object} options
+ * @param {string} options.nameModule
+ * @param {string} [options.nameTemplate]
+ * @param {string} [options.path]
+ *
+ * @returns {Promise<boolean>}
+ */
+const action = async ({ nameModule, nameTemplate, path }) => {
   // Get path to module
   const pathModule = await modules.getPathModule(nameModule);
-  indicator.info(`Path to module: ${pathModule}`);
 
   // Get name template
   const { nameTemplate } = await inquirer.prompt([
@@ -32,27 +38,32 @@ const use = async (nameModule, { path }) => {
 
   // Check `index.js`, if exist run his
   if (fs.existsSync(pathIndex)) {
-    await require(pathIndex)(
-      {
-        pathModule,
-        pathTemplate,
-        pathFrom,
-        pathTo,
-      },
-      package,
-      { inquirer, ora },
-    );
-  } else {
-    indicator
-      .info(`From: ${pathFrom}`)
-      .info(`To: ${pathTo}`)
-      .start('Setup template');
-    cloneDir(pathFrom, pathTo);
+    const params = {
+      pathModule,
+      pathTemplate,
+      pathFrom,
+      pathTo,
+    };
+    const requirePackages = { inquirer, ora };
+    return await require(pathIndex)(params, package, requirePackages);
   }
 
-  indicator.succeed('Template used');
+  // Use template, clone directory template
+  cloneDir(pathFrom, pathTo);
+
+  return true;
 };
 
-module.exports = (...args) => {
-  use(...args);
+module.exports = (nameModule, nameTemplate, options) => {
+  (async () => {
+    const indicator = ora('Use template').start();
+    const result = action({ ...options, nameModule, nameTemplate });
+
+    if (result) {
+      indicator.succeed('Template used');
+    } else {
+      indicator.succeed("Template doesn't used");
+    }
+  })();
 };
+module.exports.action = action;

@@ -20,25 +20,24 @@ const createModulesJson = () => {
 const existModulesJson = () => fs.existsSync(modulesJson);
 
 /**
- * @param {String} nameModule
- * @param {String} path
+ * @param {string} nameModule
+ * @param {string} pathModule
+ * @param {Object<string, {}>} [configModule.templates]
  *
  * @returns {Promise<boolean>}
  */
-const addModule = async (nameModule, path) => {
+const addModule = async (nameModule, pathModule) => {
   // Create `modules.json`
   createModulesJson();
 
   const modules = require(modulesJson);
-  let result = false;
 
-  if (!modules[nameModule]) {
-    modules[nameModule] = path;
-    fs.writeFileSync(modulesJson, JSON.stringify(modules, null, '  '));
-    result = true;
+  if (modules[nameModule]) {
+    throw new Error('Module exist');
   }
 
-  return result;
+  modules[nameModule] = pathModule;
+  fs.writeFileSync(modulesJson, JSON.stringify(modules, null, '  '));
 };
 
 /**
@@ -48,28 +47,25 @@ const addModule = async (nameModule, path) => {
  * @returns {Promise<boolean>}
  */
 const deleteModule = async (nameModule) => {
-  let result = false;
-
-  if (existModulesJson()) {
-    const modules = require(modulesJson);
-
-    if (modules[nameModule]) {
-      delete modules[nameModule];
-      fs.writeFileSync(modulesJson, JSON.stringify(modules, null, '  '));
-      result = true;
-    }
+  if (existModulesJson() === false) {
+    throw new Error("`modules.json` doesn't exist");
   }
 
-  return result;
+  const modules = require(modulesJson);
+  if (!modules[nameModule]) {
+    throw new Error("Module doesn't exist");
+  }
+  delete modules[nameModule];
+  fs.writeFileSync(modulesJson, JSON.stringify(modules, null, '  '));
 };
 
 /**
  * Get path to module
  * @param {String} nameModule
  *
- * @returns {Promise<string>}
+ * @returns {string}
  */
-const getPathModule = async (nameModule) => {
+const getPathModule = (nameModule) => {
   if (existModulesJson()) {
     const modules = require(modulesJson);
     return modules[nameModule] || config.paths.defaultModule;
@@ -80,9 +76,9 @@ const getPathModule = async (nameModule) => {
 /**
  * Get list modules
  *
- * @returns {Promise<Array<string>>}
+ * @returns {Array<string>}
  */
-const getListModules = async () => {
+const getListModules = () => {
   if (existModulesJson()) {
     const modules = require(modulesJson);
     return Object.keys(modules);
