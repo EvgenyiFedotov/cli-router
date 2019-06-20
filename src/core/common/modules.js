@@ -80,6 +80,8 @@ const getPathModule = (pathModuleJson, nameModule) => {
     const modules = require(pathModuleJson);
     return modules[nameModule];
   }
+
+  return undefined;
 };
 
 /**

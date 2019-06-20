@@ -14,6 +14,8 @@ module.exports = {
   },
   rules: {
     "linebreak-style": ["error", "windows"],
+    "global-require": "off",
+    "import/no-dynamic-require": "off"
   },
   env: {
     "jest": true
