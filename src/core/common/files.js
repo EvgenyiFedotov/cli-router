@@ -75,20 +75,23 @@ const cloneFile = (pathFrom, pathTo, callback) => {
  *
  * @returns {void}
  */
-// const cloneDir = (pathFrom, pathTo, callback) => {
-//   const isDir = fs.statSync(pathFrom).isDirectory();
+const cloneDir = (pathFrom, pathTo, callback) => {
+  if (!pathFrom || !pathTo) throw new Error("Arguments don't correct");
 
-//   if (isDir) {
-//     createDirRecurs(pathTo);
+  const isDir = fs.statSync(pathFrom).isDirectory();
 
-//     fs.readdirSync(pathFrom).forEach((fileName) => {
-//       cloneDir(`${pathFrom}/${fileName}`, `${pathTo}/${fileName}`, callback);
-//     });
-//   } else {
-//     cloneFile(pathFrom, pathTo, callback);
-//   }
-// };
+  if (isDir) {
+    createDirRecurs(pathTo);
+
+    fs.readdirSync(pathFrom).forEach((fileName) => {
+      cloneDir(`${pathFrom}/${fileName}`, `${pathTo}/${fileName}`, callback);
+    });
+  } else {
+    cloneFile(pathFrom, pathTo, callback);
+  }
+};
 
 module.exports.createDir = createDir;
 module.exports.createDirRecurs = createDirRecurs;
 module.exports.cloneFile = cloneFile;
+module.exports.cloneDir = cloneDir;

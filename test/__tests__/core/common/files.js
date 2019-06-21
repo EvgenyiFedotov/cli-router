@@ -5,7 +5,8 @@ const files = require('../../../../src/core/common/files');
 const helpers = require('../../../helpers');
 
 // Constants
-const pathFromCloneFile = `${process.cwd()}/test/__mocks__/clone-file/index.js`;
+const pathFromCloneDir = `${process.cwd()}/test/__mocks__/clone-file`;
+const pathFromCloneFile = `${pathFromCloneDir}/index.js`;
 const pathTestsResults = `${process.cwd()}/tests-results`;
 const pathToCloneFileDir = `${pathTestsResults}/clone-file`;
 const pathToCloneFile = `${pathToCloneFileDir}/index.js`;
@@ -46,4 +47,10 @@ describe('cloneFile()', () => {
     expect(() => files.cloneFile(pathFromCloneFile, pathToCloneFile, ({ fileStr }) => fileStr.replace(/{{ name }}/g, 'handler'))).not.toThrow();
     expect(fs.existsSync(pathFromCloneFile)).toBe(true);
   });
+});
+
+test('createDir()', () => {
+  expect(files.cloneDir).toThrow();
+  expect(() => files.cloneDir(pathFromCloneDir, pathToCloneFileDir)).not.toThrow();
+  expect(fs.existsSync(pathFromCloneFile)).toBe(true);
 });
