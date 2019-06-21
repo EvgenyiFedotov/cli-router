@@ -18,16 +18,19 @@ const createDir = (path) => {
  * Create directory recursively
  *
  * @param {string} path - Path to create directory
+ * @param {string} prefix - Prefix for gives correct path
  *
  * @returns {void}
  */
-const createDirRecurs = (path) => {
-  const cbCreateDir = (memo, element) => {
-    createDir(memo);
-    return `${memo}${element}/`;
-  };
-  path.split('/').reduce(cbCreateDir, '/');
-  createDir(path);
+const createDirRecurs = (path, prefix = '') => {
+  const appPath = path.split('/');
+
+  const pathCreateDir = `${prefix}${appPath.shift()}/`;
+  createDir(pathCreateDir);
+
+  if (appPath.length) {
+    createDirRecurs(appPath.join('/'), pathCreateDir);
+  }
 };
 
 /**
@@ -62,6 +65,29 @@ const cloneFile = (pathFrom, pathTo, callback) => {
 
   fs.writeFileSync(pathTo, fileStr);
 };
+
+/**
+ * Clone directory from -> to
+ *
+ * @param {string} pathFrom - Path from
+ * @param {string} pathTo - Path to
+ * @param {(params: ParamsCallbackCloneFile) => void} [callback] - Callback for replace content file (maybe by chunks)
+ *
+ * @returns {void}
+ */
+// const cloneDir = (pathFrom, pathTo, callback) => {
+//   const isDir = fs.statSync(pathFrom).isDirectory();
+
+//   if (isDir) {
+//     createDirRecurs(pathTo);
+
+//     fs.readdirSync(pathFrom).forEach((fileName) => {
+//       cloneDir(`${pathFrom}/${fileName}`, `${pathTo}/${fileName}`, callback);
+//     });
+//   } else {
+//     cloneFile(pathFrom, pathTo, callback);
+//   }
+// };
 
 module.exports.createDir = createDir;
 module.exports.createDirRecurs = createDirRecurs;
