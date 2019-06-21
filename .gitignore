@@ -7,3 +7,5 @@ templates
 modules.json
 _src-old
 _test-old
+test/coverage
+coverage

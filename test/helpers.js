@@ -7,7 +7,7 @@ const { exec } = require('child_process');
  * @returns {Promise<undefined>}
  */
 module.exports.rm = paths => new Promise((resolve, reject) => {
-  exec(`rm -rf ${paths}`, (error) => {
-    error ? reject(error) : resolve();
+  exec(`rm -rf ${paths}`, () => {
+    resolve();
   });
 });

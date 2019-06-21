@@ -48,9 +48,11 @@ test('getListModules()', () => {
   expect(modules.getListModules(modulesJson)).toEqual(
     expect.arrayContaining([mocksConstants.nameModule]),
   );
+  expect(modules.getListModules('./new-modules.json')).toEqual(expect.arrayContaining([]));
 });
 
 test('deleteModule()', async () => {
+  await expect(modules.deleteModule()).rejects.toThrow();
   await expect(modules.deleteModule(modulesJson, mocksConstants.nameModule)).resolves.not.toThrow();
   await expect(modules.deleteModule(modulesJson, mocksConstants.nameModule)).rejects.toThrow();
 
