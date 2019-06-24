@@ -5,13 +5,10 @@ const fs = require('fs');
  *
  * @param {string} path - Path to create directory
  *
- * @returns {void}
+ * @returns {boolean} True - if directory created
  */
 const createDir = (path) => {
-  const isExist = fs.existsSync(path);
-  if (isExist === false) {
-    fs.mkdirSync(path);
-  }
+  if (path && !fs.existsSync(path)) fs.mkdirSync(path);
 };
 
 /**

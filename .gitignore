@@ -6,6 +6,6 @@ component-ts.config.js
 templates
 modules.json
 _src-old
-_test-old
+__test-old
 test/coverage
 coverage
