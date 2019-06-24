@@ -1,16 +1,23 @@
+const modules = require('./modules');
+const files = require('./files');
+
 /**
- * Create template
+ * Create template in module
  *
  * @param {string} nameModule
  * @param {string} nameTemplate
- * @param {Array<string>} files
+ * @param {Array<string>} files - Array paths to files template
  *
  * @returns {Promise<undefined>}
  */
-const createTemplate = async (nameModule, nameTemplate, files) => {};
+const createTemplate = async (nameModule, nameTemplate, files) => {
+  if (!nameModule || !nameTemplate || !files || !files.length) {
+    throw new Error("Args doesn't correct");
+  }
+};
 
 /**
- * Delete template
+ * Delete template in module
  *
  * @param {string} nameModule
  * @param {string} nameTemplate
@@ -20,7 +27,7 @@ const createTemplate = async (nameModule, nameTemplate, files) => {};
 const deleteTemplate = async (nameModule, nameTemplate) => {};
 
 /**
- * Run template
+ * Run template in module
  *
  * @param {string} nameModule
  * @param {string} nameTemplate
@@ -30,7 +37,7 @@ const deleteTemplate = async (nameModule, nameTemplate) => {};
 const runTemplate = async (nameModule, nameTemplate) => {};
 
 /**
- * Get list templates
+ * Get list templates in module
  *
  * @param {string} nameModule
  *
@@ -39,8 +46,14 @@ const runTemplate = async (nameModule, nameTemplate) => {};
 const getListTemplates = (nameModule) => {};
 
 /**
- * Create api by nameModule
+ * Create api by nameModule in module
  *
  * @param {string} nameModule
  */
 const createApiTemplates = nameModule => ({});
+
+module.exports.createTemplate = createTemplate;
+module.exports.deleteTemplate = deleteTemplate;
+module.exports.runTemplate = runTemplate;
+module.exports.getListTemplates = getListTemplates;
+module.exports.createApiTemplates = createApiTemplates;

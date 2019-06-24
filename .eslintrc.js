@@ -13,11 +13,11 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    "linebreak-style": ["error", "windows"],
-    "global-require": "off",
-    "import/no-dynamic-require": "off"
+    'linebreak-style': ['error', 'windows'],
+    'global-require': 'off',
+    'import/no-dynamic-require': 'off',
   },
   env: {
-    "jest": true
-  }
+    jest: true,
+  },
 };
