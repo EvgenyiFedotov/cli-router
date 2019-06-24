@@ -1,8 +1,8 @@
 const fs = require('fs');
 const http = require('http');
 
-const {{ name }} = () => {
+const handler = () => {
   return 'Hello world!';
 };
 
-module.exports.{{ name }} = {{ name }};
+module.exports.handler = handler;

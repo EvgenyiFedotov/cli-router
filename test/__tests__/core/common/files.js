@@ -10,6 +10,7 @@ const pathFromCloneFile = `${pathFromCloneDir}/index.js`;
 const pathTestsResults = `${process.cwd()}/tests-results`;
 const pathToCloneFileDir = `${pathTestsResults}/clone-file`;
 const pathToCloneFile = `${pathToCloneFileDir}/index.js`;
+const pathMockFile = `${__dirname}/../../../__mocks__/clone-file-with-name/index.js`;
 
 beforeAll(() => {
   helpers.rm(pathTestsResults);
@@ -46,11 +47,27 @@ describe('cloneFile()', () => {
     expect(() => files.createDirRecurs(pathToCloneFileDir)).not.toThrow(); // TODO
     expect(() => files.cloneFile(pathFromCloneFile, pathToCloneFile, ({ fileStr }) => fileStr.replace(/{{ name }}/g, 'handler'))).not.toThrow();
     expect(fs.existsSync(pathFromCloneFile)).toBe(true);
+
+    const clonedFile = fs.readFileSync(pathToCloneFile);
+    const mockFile = fs.readFileSync(pathMockFile);
+    expect(clonedFile.toString()).toBe(mockFile.toString());
   });
 });
 
-test('createDir()', () => {
-  expect(files.cloneDir).toThrow();
-  expect(() => files.cloneDir(pathFromCloneDir, pathToCloneFileDir)).not.toThrow();
-  expect(fs.existsSync(pathFromCloneFile)).toBe(true);
+describe('createDir()', () => {
+  test('without `callback`', () => {
+    expect(files.cloneDir).toThrow();
+    expect(() => files.cloneDir(pathFromCloneDir, pathToCloneFileDir)).not.toThrow();
+    expect(fs.existsSync(pathFromCloneFile)).toBe(true);
+  });
+
+  test('with `callback`', () => {
+    expect(files.cloneDir).toThrow();
+    expect(() => files.cloneDir(pathFromCloneDir, pathToCloneFileDir, ({ fileStr }) => fileStr.replace(/{{ name }}/g, 'handler'))).not.toThrow();
+    expect(fs.existsSync(pathFromCloneFile)).toBe(true);
+
+    const clonedFile = fs.readFileSync(pathToCloneFile);
+    const mockFile = fs.readFileSync(pathMockFile);
+    expect(clonedFile.toString()).toBe(mockFile.toString());
+  });
 });
