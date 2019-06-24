@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "jest --verbose",
-    "test:watch": "jest --watch --verbose"
+    "test:watch": "jest --watch --verbose",
+    "build:readme": "./node_modules/.bin/doxdox 'src/**/*.js' --layout markdown --output README.md"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "ora": "^3.4.0"
   },
   "devDependencies": {
+    "doxdox": "^3.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.3",

@@ -42,11 +42,16 @@ const createDirRecurs = (path, prefix = '') => {
  */
 
 /**
+ * @callback CallbackCloneFile
+ * @arg {ParamsCallbackCloneFile} params
+ */
+
+/**
  * Clone file from -> to
  *
  * @param {string} pathFrom - Path from clone
  * @param {string} pathTo - Path to clone
- * @param {(params: ParamsCallbackCloneFile) => void} [callback] - Callback for replace content file (maybe by chunks)
+ * @param {CallbackCloneFile} [callback] - Callback for replace content file (maybe by chunks)
  *
  * @returns {void}
  */
@@ -71,9 +76,7 @@ const cloneFile = (pathFrom, pathTo, callback) => {
  *
  * @param {string} pathFrom - Path from
  * @param {string} pathTo - Path to
- * @param {(params: ParamsCallbackCloneFile) => void} [callback] - Callback for replace content file (maybe by chunks)
- *
- * @returns {void}
+ * @param {CallbackCloneFile} [callback] - Callback for replace content file (maybe by chunks)
  */
 const cloneDir = (pathFrom, pathTo, callback) => {
   if (!pathFrom || !pathTo) throw new Error("Arguments don't correct");
