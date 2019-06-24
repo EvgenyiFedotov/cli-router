@@ -36,3 +36,8 @@ module.exports.createName = function* createName(prefix) {
  */
 const generatorName = this.createName(CONST.NAME_SPACE);
 module.exports.createUniqName = () => generatorName.next().value;
+
+/**
+ * Create uniqe path file config
+ */
+module.exports.createPathConfig = () => `${process.cwd()}/${this.createUniqName()}.json`;

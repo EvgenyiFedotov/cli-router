@@ -73,12 +73,10 @@ const deleteModule = (pathModuleConfig, nameModule) => {
  * @returns {string}
  */
 const getPathModule = (pathModuleConfig, nameModule) => {
-  if (pathModuleConfig && existModulesConfig(pathModuleConfig)) {
-    const modules = require(pathModuleConfig);
-    return modules[nameModule];
-  }
+  if (!existModulesConfig(pathModuleConfig)) throw new Error('Modules config does not exist');
 
-  return undefined;
+  const modules = require(pathModuleConfig);
+  return modules[nameModule];
 };
 
 /**

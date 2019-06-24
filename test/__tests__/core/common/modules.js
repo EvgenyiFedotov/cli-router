@@ -2,13 +2,8 @@ const modules = require('../../../../src/core/common/modules');
 
 const helpers = require('../../../helpers');
 
-/**
- * Create uniqe path file config
- */
-const createPathConfig = () => `${process.cwd()}/${helpers.createUniqName()}.json`;
-
 test('existModulesConfig()', async () => {
-  const nameFileConifg = createPathConfig();
+  const nameFileConifg = helpers.createPathConfig();
 
   expect(modules.existModulesConfig(nameFileConifg)).toBe(false);
 
@@ -19,7 +14,7 @@ test('existModulesConfig()', async () => {
 });
 
 test('createModulesConfig()', () => {
-  const nameFileConifg = createPathConfig();
+  const nameFileConifg = helpers.createPathConfig();
 
   expect(() => modules.createModulesConfig(nameFileConifg)).not.toThrow();
   expect(() => modules.createModulesConfig(nameFileConifg)).not.toThrow();
@@ -29,7 +24,7 @@ test('createModulesConfig()', () => {
 });
 
 test('addModule()', () => {
-  const nameFileConifg = createPathConfig();
+  const nameFileConifg = helpers.createPathConfig();
   const nameModule = helpers.createUniqName();
   const pathModule = helpers.createUniqName();
 
@@ -44,7 +39,7 @@ test('addModule()', () => {
 });
 
 test('deleteModule()', () => {
-  const nameFileConifg = createPathConfig();
+  const nameFileConifg = helpers.createPathConfig();
   const nameModule = helpers.createUniqName();
   const pathModule = helpers.createUniqName();
 
@@ -60,12 +55,12 @@ test('deleteModule()', () => {
 });
 
 test('getPathModule()', () => {
-  const nameFileConifg = createPathConfig();
+  const nameFileConifg = helpers.createPathConfig();
   const nameModule = helpers.createUniqName();
   const pathModule = helpers.createUniqName();
 
-  expect(modules.getPathModule).not.toThrow();
-  expect(modules.getPathModule(nameFileConifg, nameModule)).toBe(undefined);
+  expect(modules.getPathModule).toThrow();
+  expect(() => modules.getPathModule(nameFileConifg, nameModule)).toThrow();
 
   modules.createModulesConfig(nameFileConifg);
   modules.addModule(nameFileConifg, nameModule, pathModule);
@@ -78,7 +73,7 @@ test('getPathModule()', () => {
 });
 
 test('getListModules()', () => {
-  const nameFileConifg = createPathConfig();
+  const nameFileConifg = helpers.createPathConfig();
   const nameModule0 = helpers.createUniqName();
   const pathModule0 = helpers.createUniqName();
   const nameModule1 = helpers.createUniqName();
