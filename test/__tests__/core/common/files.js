@@ -11,7 +11,7 @@ const CONST = require('../../../constants');
 const cb = ({ fileStr }) => fileStr.replace(/{{ name }}/g, 'handler');
 
 test('createDir()', () => {
-  const nameDir = helpers.createNameDir();
+  const nameDir = helpers.createUniqName();
   expect(files.createDir).not.toThrow();
   expect(() => files.createDir(nameDir)).not.toThrow();
   expect(fs.existsSync(nameDir)).toBe(true);
@@ -20,9 +20,9 @@ test('createDir()', () => {
 });
 
 test('createDirRecurs()', () => {
-  const nameDir1 = helpers.createNameDir();
-  const nameDir2 = helpers.createNameDir();
-  const nameDir3 = helpers.createNameDir();
+  const nameDir1 = helpers.createUniqName();
+  const nameDir2 = helpers.createUniqName();
+  const nameDir3 = helpers.createUniqName();
   const path = `${nameDir1}/${nameDir2}/${nameDir3}`;
 
   files.createDirRecurs(path);
@@ -33,7 +33,7 @@ test('createDirRecurs()', () => {
 
 describe('cloneFile()', () => {
   test('without `callback`', () => {
-    const nameDir = helpers.createNameDir();
+    const nameDir = helpers.createUniqName();
 
     expect(() => {
       files.cloneFile(`${CONST.PATH_MOCK_MODULE}/index.js`, `${nameDir}/index.js`);
@@ -49,7 +49,7 @@ describe('cloneFile()', () => {
   });
 
   test('with `callback`', () => {
-    const nameDir = helpers.createNameDir();
+    const nameDir = helpers.createUniqName();
 
     files.createDir(nameDir);
     expect(() => {
@@ -66,7 +66,7 @@ describe('cloneFile()', () => {
 
 describe('cloneDir()', () => {
   test('without `callback`', () => {
-    const nameDir = helpers.createNameDir();
+    const nameDir = helpers.createUniqName();
 
     expect(files.cloneDir).toThrow();
 
@@ -79,7 +79,7 @@ describe('cloneDir()', () => {
   });
 
   test('with `callback`', async () => {
-    const nameDir = helpers.createNameDir();
+    const nameDir = helpers.createUniqName();
 
     expect(() => {
       files.cloneDir(CONST.PATH_MOCK_MODULE, nameDir, cb);

@@ -1,83 +1,80 @@
 const fs = require('fs');
 
 /**
- * Check exist `modules.json`
+ * Check exist file modules config
  *
  * @param {string} path
  *
- * @returns {Promise<boolean>}
+ * @returns {boolean}
  */
-const existModulesJson = path => fs.existsSync(path);
+const existModulesConfig = path => fs.existsSync(path);
 
 /**
- * Create `modules.json
+ * Create file modules config
  *
  * @param {string} path
  *
  * @returns {void}
  */
-const createModulesJson = (path) => {
-  if (!fs.existsSync(path)) {
-    fs.writeFileSync(path, '{}');
-  }
+const createModulesConfig = (path) => {
+  if (!fs.existsSync(path)) fs.writeFileSync(path, '{}');
 };
 
 /**
  * Add module in list modules
  *
- * @param {string} pathModuleJson
+ * @param {string} pathModuleConfig
  * @param {string} nameModule
  * @param {string} pathModule
  * @param {Object<string, {}>} [configModule.templates]
- *
- * @returns {Promise<boolean>}
  */
-const addModule = async (pathModuleJson, nameModule, pathModule) => {
-  // Create `modules.json`
-  createModulesJson(pathModuleJson);
+const addModule = (pathModuleConfig, nameModule, pathModule) => {
+  if (!pathModuleConfig || !nameModule || !pathModule) throw new Error('Args does not correct');
+  if (!existModulesConfig(pathModuleConfig)) throw new Error('Modules config does not exist');
 
-  const modules = require(pathModuleJson);
+  const modules = require(pathModuleConfig);
 
   if (modules[nameModule]) {
     throw new Error('Module exist');
   }
 
   modules[nameModule] = pathModule;
-  fs.writeFileSync(pathModuleJson, JSON.stringify(modules, null, '  '));
+  fs.writeFileSync(pathModuleConfig, JSON.stringify(modules, null, '  '));
 };
 
 /**
  * Delete module from `modules.json`
  *
- * @param {string} pathModuleJson
+ * @param {string} pathModuleConfig
  * @param {String} nameModule
  *
- * @returns {Promise<boolean>}
+ * @returns {boolean}
  */
-const deleteModule = async (pathModuleJson, nameModule) => {
-  if (existModulesJson(pathModuleJson) === false) {
-    throw new Error("`modules.json` doesn't exist");
+const deleteModule = (pathModuleConfig, nameModule) => {
+  if (!pathModuleConfig || !nameModule) throw new Error('Args does not correct');
+  if (existModulesConfig(pathModuleConfig) === false) {
+    throw new Error("Modules config doesn't exist");
   }
 
-  const modules = require(pathModuleJson);
+  const modules = require(pathModuleConfig);
   if (!modules[nameModule]) {
     throw new Error("Module doesn't exist");
   }
   delete modules[nameModule];
-  fs.writeFileSync(pathModuleJson, JSON.stringify(modules, null, '  '));
+  fs.writeFileSync(pathModuleConfig, JSON.stringify(modules, null, '  '));
 };
 
 /**
  * Get path to module
  *
- * @param {string} pathModuleJson
+ * @param {string} pathModuleConfig
  * @param {String} nameModule
  *
  * @returns {string}
  */
-const getPathModule = (pathModuleJson, nameModule) => {
-  if (existModulesJson(pathModuleJson)) {
-    const modules = require(pathModuleJson);
+const getPathModule = (pathModuleConfig, nameModule) => {
+  if (pathModuleConfig && existModulesConfig(pathModuleConfig)) {
+    const modules = require(pathModuleConfig);
     return modules[nameModule];
   }
 
@@ -87,39 +84,21 @@ const getPathModule = (pathModuleJson, nameModule) => {
 /**
  * Get list modules
  *
- * @param {string} pathModuleJson
+ * @param {string} pathModuleConfig
  *
  * @returns {Array<string>}
  */
-const getListModules = (pathModuleJson) => {
-  if (!pathModuleJson) throw new Error('Passed `pathModuleJson`');
+const getListModules = (pathModuleConfig) => {
+  if (!pathModuleConfig) throw new Error('Passed `pathModuleConfig`');
+  if (!existModulesConfig(pathModuleConfig)) throw new Error('Modules config does not exist');
 
-  if (existModulesJson(pathModuleJson)) {
-    const modules = require(pathModuleJson);
-    return Object.keys(modules);
-  }
-
-  return [];
+  const modules = require(pathModuleConfig);
+  return Object.keys(modules);
 };
 
-/**
- * Bind path to `module.json`
- *
- * @param {sting} path
- */
-const createApiModulesJson = path => ({
-  existModulesJson: (...args) => existModulesJson(path, ...args),
-  createModulesJson: (...args) => createModulesJson(path, ...args),
-  addModule: (...args) => addModule(path, ...args),
-  deleteModule: (...args) => deleteModule(path, ...args),
-  getPathModule: (...args) => getPathModule(path, ...args),
-  getListModules: (...args) => getListModules(path, ...args),
-});
-
-module.exports.existModulesJson = existModulesJson;
-module.exports.createModulesJson = createModulesJson;
+module.exports.existModulesConfig = existModulesConfig;
+module.exports.createModulesConfig = createModulesConfig;
 module.exports.addModule = addModule;
 module.exports.deleteModule = deleteModule;
 module.exports.getPathModule = getPathModule;
 module.exports.getListModules = getListModules;
-module.exports.createApiModulesJson = createApiModulesJson;

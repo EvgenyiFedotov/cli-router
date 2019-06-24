@@ -30,9 +30,9 @@ module.exports.createName = function* createName(prefix) {
 };
 
 /**
- * Create unique name directory
+ * Create generator unique name for tests
  *
  * @returns {string} Name directory
  */
-const generatorNameDir = this.createName(CONST.NAME_DIR);
-module.exports.createNameDir = () => generatorNameDir.next().value;
+const generatorName = this.createName(CONST.NAME_SPACE);
+module.exports.createUniqName = () => generatorName.next().value;

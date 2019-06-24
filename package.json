@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest --verbose",
-    "test:watch": "jest --watch --verbose",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "build:readme": "./node_modules/.bin/doxdox 'src/**/*.js' --layout markdown --output README.md"
   },
   "repository": {
