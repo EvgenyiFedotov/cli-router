@@ -1,4 +1,5 @@
 const fs = require('fs');
+const childProcess = require('child_process');
 
 /**
  * Create directory
@@ -91,7 +92,19 @@ const cloneDir = (pathFrom, pathTo, callback) => {
   }
 };
 
+/**
+ * Remove directory or file
+ *
+ * @param {string} paths - Paths for remove
+ *
+ * @returns {Promise<undefined>}
+ */
+const remove = paths => new Promise(resolve => childProcess.exec(`rm -rf ${paths}`, () => {
+  resolve();
+}));
+
 module.exports.createDir = createDir;
 module.exports.createDirRecurs = createDirRecurs;
 module.exports.cloneFile = cloneFile;
 module.exports.cloneDir = cloneDir;
+module.exports.remove = remove;

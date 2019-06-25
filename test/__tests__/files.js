@@ -1,9 +1,9 @@
 const fs = require('fs');
 
-const files = require('../../../../src/core/common/files');
+const files = require('../../src/core/common/files');
 
-const helpers = require('../../../helpers');
-const CONST = require('../../../constants');
+const helpers = require('../helpers');
+const CONST = require('../constants');
 
 /**
  * Callback for file
@@ -16,7 +16,7 @@ test('createDir()', () => {
   expect(() => files.createDir(nameDir)).not.toThrow();
   expect(fs.existsSync(nameDir)).toBe(true);
 
-  helpers.rm(nameDir);
+  files.remove(nameDir);
 });
 
 test('createDirRecurs()', () => {
@@ -28,7 +28,7 @@ test('createDirRecurs()', () => {
   files.createDirRecurs(path);
   expect(fs.existsSync(path)).toBe(true);
 
-  helpers.rm(nameDir1);
+  files.remove(nameDir1);
 });
 
 describe('cloneFile()', () => {
@@ -45,7 +45,7 @@ describe('cloneFile()', () => {
     }).not.toThrow();
     expect(fs.existsSync(`${nameDir}/index.js`)).toBe(true);
 
-    helpers.rm(nameDir);
+    files.remove(nameDir);
   });
 
   test('with `callback`', () => {
@@ -60,7 +60,7 @@ describe('cloneFile()', () => {
     const clonedFile = fs.readFileSync(`${nameDir}/index.js`);
     expect(clonedFile.toString()).toBe(mockFile.toString());
 
-    helpers.rm(nameDir);
+    files.remove(nameDir);
   });
 });
 
@@ -75,10 +75,10 @@ describe('cloneDir()', () => {
     }).not.toThrow();
     expect(fs.existsSync(`${nameDir}/index.js`)).toBe(true);
 
-    helpers.rm(nameDir);
+    files.remove(nameDir);
   });
 
-  test('with `callback`', async () => {
+  test('with `callback`', () => {
     const nameDir = helpers.createUniqName();
 
     expect(() => {
@@ -89,6 +89,14 @@ describe('cloneDir()', () => {
     const clonedFile = fs.readFileSync(`${nameDir}/index.js`);
     expect(clonedFile.toString()).toBe(mockFile.toString());
 
-    await helpers.rm(nameDir);
+    files.remove(nameDir);
   });
+});
+
+test('remove()', async () => {
+  const nameDir = helpers.createUniqName();
+
+  files.createDir(nameDir);
+
+  await expect(files.remove(nameDir)).resolves.not.toThrow();
 });

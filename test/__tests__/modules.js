@@ -1,8 +1,9 @@
-const modules = require('../../../../src/core/common/modules');
+const modules = require('../../src/core/common/modules');
+const files = require('../../src/core/common/files');
 
-const helpers = require('../../../helpers');
+const helpers = require('../helpers');
 
-test('existModulesConfig()', async () => {
+test('existModulesConfig()', () => {
   const nameFileConifg = helpers.createPathConfig();
 
   expect(modules.existModulesConfig(nameFileConifg)).toBe(false);
@@ -10,7 +11,7 @@ test('existModulesConfig()', async () => {
   modules.createModulesConfig(nameFileConifg);
   expect(modules.existModulesConfig(nameFileConifg)).toBe(true);
 
-  await helpers.rm(nameFileConifg);
+  files.remove(nameFileConifg);
 });
 
 test('createModulesConfig()', () => {
@@ -20,7 +21,7 @@ test('createModulesConfig()', () => {
   expect(() => modules.createModulesConfig(nameFileConifg)).not.toThrow();
   expect(modules.existModulesConfig(nameFileConifg)).toBe(true);
 
-  helpers.rm(nameFileConifg);
+  files.remove(nameFileConifg);
 });
 
 test('addModule()', () => {
@@ -35,7 +36,7 @@ test('addModule()', () => {
   expect(() => modules.addModule(nameFileConifg, nameModule, pathModule)).not.toThrow();
   expect(() => modules.addModule(nameFileConifg, nameModule, pathModule)).toThrow();
 
-  helpers.rm(nameFileConifg);
+  files.remove(nameFileConifg);
 });
 
 test('deleteModule()', () => {
@@ -49,9 +50,8 @@ test('deleteModule()', () => {
   modules.createModulesConfig(nameFileConifg);
   modules.addModule(nameFileConifg, nameModule, pathModule);
   expect(() => modules.deleteModule(nameFileConifg, nameModule)).not.toThrow();
-  expect(() => modules.deleteModule(nameFileConifg, nameModule)).toThrow();
 
-  helpers.rm(nameFileConifg);
+  files.remove(nameFileConifg);
 });
 
 test('getPathModule()', () => {
@@ -69,7 +69,7 @@ test('getPathModule()', () => {
   modules.deleteModule(nameFileConifg, nameModule);
   expect(modules.getPathModule(nameFileConifg, nameModule)).toBe(undefined);
 
-  helpers.rm(nameFileConifg);
+  files.remove(nameFileConifg);
 });
 
 test('getListModules()', () => {
@@ -91,5 +91,5 @@ test('getListModules()', () => {
     expect.arrayContaining([nameModule0, nameModule1]),
   );
 
-  helpers.rm(nameFileConifg);
+  files.remove(nameFileConifg);
 });

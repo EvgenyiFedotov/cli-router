@@ -57,9 +57,6 @@ const deleteModule = (pathModuleConfig, nameModule) => {
   }
 
   const modules = require(pathModuleConfig);
-  if (!modules[nameModule]) {
-    throw new Error("Module doesn't exist");
-  }
   delete modules[nameModule];
   fs.writeFileSync(pathModuleConfig, JSON.stringify(modules, null, '  '));
 };
